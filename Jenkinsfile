@@ -21,8 +21,10 @@ node {
        sh "tree hello_app"
        sh "tree /var/lib/jenkins/workspace/jenkinsfile"
        
+ }
+ 
+ node{      
    stage('build status')
-         echo "Build ${currentBuild.currentResult}"
-   
+         echo "Build ${currentBuild.currentResult}"  
 }
 
