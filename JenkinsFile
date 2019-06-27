@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    options {
+      buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '5', numToKeepStr: '3'))  
+    }
+    stages {
+        stage('creating workspace directory') {
+            steps {
+                sh "mkdir hello_app"
+            }
+        }
+        stage('checkout to sub-directory') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'hello_app']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Reshma-rechu/JenkinsDemo.git']]])
+            }
+        }
+        stage('checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Reshma-rechu/JenkinsDemo.git']]])
+            }
+        }
+        stage('executing shell script') {
+            steps {
+                sh "chmod 755 hello.sh"
+                sh "./hello.sh"
+                sh "touch test1.txt"
+                sh "touch test2.txt"
+            }
+        }
+        stage('archiving files') {
+            steps {
+                archiveArtifacts '*.txt'
+            }
+        }
+        stage('listing workspace') {
+            steps {
+                sh "tree hello_app"
+                sh "tree /var/lib/jenkins/workspace/new_pipelinejob"
+            }
+        }
+    }
+    post{
+        always{
+            echo "Build ${currentBuild.currentResult}"
+        }
+    }
+}
