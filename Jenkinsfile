@@ -20,9 +20,11 @@ node {
    stage('listing workspace')
        sh "tree hello_app"
        sh "tree /var/lib/jenkins/workspace/jenkinsfile"
-}
-post{
+       
+   post{
     always{
          echo "Build ${currentBuild.currentResult}"
     }
+  }
 }
+
