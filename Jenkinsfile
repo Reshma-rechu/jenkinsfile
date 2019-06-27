@@ -8,5 +8,16 @@ node {
    stage('checkout') 
        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Reshma-rechu/JenkinsDemo.git']]])
    
+   stage('executing shell script')
+       sh "chmod 755 hello.sh"
+       sh "./hello.sh"
+       sh "touch test1.txt"
+       sh "touch test2.txt"
+	   
+   stage('archiving files')
+       archiveArtifacts '*.txt'
+	   
+   stage('listing workspace')
+       sh "tree hello_app"
+       sh "tree /var/lib/jenkins/workspace/jenkinsfile"
 }
- 
