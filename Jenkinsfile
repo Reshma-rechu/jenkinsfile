@@ -21,3 +21,8 @@ node {
        sh "tree hello_app"
        sh "tree /var/lib/jenkins/workspace/jenkinsfile"
 }
+post{
+    always{
+         echo "Build ${currentBuild.currentResult}"
+    }
+}
